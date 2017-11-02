@@ -41,6 +41,12 @@ RSpec.describe Slack::Notifier::Util::LinkFormatter do
       expect(formatted).to include("<http://example2.com|this2>")
     end
 
+    it "handles links with trailing brackets" do
+      formatted = described_class.format("Hello World, enjoy [foo(bar)](http://example.com/foo(bar))<a href='http://example.com/bar(foo)'>bar(foo)</a>")
+      expect(formatted).to include("http://example.com/foo(bar)|foo(bar)")
+      expect(formatted).to include("http://example.com/bar(foo)|bar(foo)")
+    end
+
     if "".respond_to? :scrub
       context "when on ruby 2.1+ or have string-scrub installed" do
         it "handles invalid unicode sequences" do
